@@ -10,7 +10,6 @@ class User < ApplicationRecord
   belongs_to :team
   has_and_belongs_to_many :projects
   has_many :tasks, through: :projects
-  has_one_attached :avatar
 
   # Validations
   validates :name, presence: true

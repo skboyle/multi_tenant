@@ -3,18 +3,15 @@ module Api
     class UsersController < ApplicationController
       before_action :authenticate_user!
 
-      # GET /api/v1/users/me
       def me
         render json: UserSerializer.new(current_user).serializable_hash
       end
 
-      # GET /api/v1/users/:id
       def show
         user = User.find(params[:id])
         render json: UserSerializer.new(user).serializable_hash
       end
 
-      # PATCH /api/v1/users/me
       def update
         if current_user.update(user_params)
           render json: UserSerializer.new(current_user).serializable_hash

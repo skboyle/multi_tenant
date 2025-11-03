@@ -4,12 +4,10 @@ module Api
       before_action :authenticate_user!
       before_action :set_team, only: [ :show, :update ]
 
-      # GET /api/v1/teams/:id
       def show
         render json: TeamSerializer.new(@team).serializable_hash
       end
 
-      # PATCH /api/v1/teams/:id
       def update
         if @team.update(team_params)
           render json: TeamSerializer.new(@team).serializable_hash
