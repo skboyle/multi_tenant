@@ -1,7 +1,5 @@
-class TaskSerializer
+class ProjectShallowSerializer
   include JSONAPI::Serializer
 
   attributes :id, :title, :description, :priority, :completed, :order_position
-
-  belongs_to :project, serializer: ProjectShallowSerializer
 end
