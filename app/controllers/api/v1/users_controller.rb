@@ -7,11 +7,6 @@ module Api
         render json: UserSerializer.new(current_user).serializable_hash
       end
 
-      def show
-        user = User.find(params[:id])
-        render json: UserSerializer.new(user).serializable_hash
-      end
-
       def update
         if current_user.update(user_params)
           render json: UserSerializer.new(current_user).serializable_hash

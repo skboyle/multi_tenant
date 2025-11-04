@@ -2,7 +2,9 @@ module Api
   module V1
     class ProjectsController < ApplicationController
       before_action :authenticate_user!
+      before_action :ensure_active_user
       before_action :set_project, only: [ :show, :update, :destroy ]
+      before_action :authorize_destroy!, only: [ :destroy ]
 
       def index
         projects = Project.includes(:tasks, :users, :project_leader).all
@@ -44,6 +46,12 @@ module Api
 
       def project_params
         params.require(:project).permit(:title, :description, :priority, :completed, :project_leader_id, :order_position, user_ids: [])
+      end
+
+      def authorize_destroy!
+        unless current_user.admin?
+          render json: { error: "Only admins can delete projects" }, status: :forbidden
+        end
       end
     end
   end
