@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "users/me", to: "users#me"
       patch "users/me", to: "users#update"
+      post "signup", to: "auth#signup"
 
       resources :teams, only: [ :show, :update ]
       resources :projects do

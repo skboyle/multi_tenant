@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  # Multi-tenancy
   acts_as_tenant(:team)
   # Devise modules
   devise :database_authenticatable, :registerable,
@@ -12,8 +13,19 @@ class User < ApplicationRecord
   has_many :tasks, through: :projects
 
   # Validations
-  validates :name, presence: true
+  enum :role, { member: "member", admin: "admin" }
+  enum :status, { pending: "pending", active: "active" }
 
-  # Multi-tenancy (use acts_as_tenant later)
-  # acts_as_tenant(:team) # optional, can configure per controller
+  after_initialize :set_defaults, if: :new_record?
+
+  validates :name, presence: true
+  validates :role, presence: true
+  validates :status, presence: true
+
+  private
+
+  def set_defaults
+    self.status ||= "pending"
+    self.role ||= "member"
+  end
 end

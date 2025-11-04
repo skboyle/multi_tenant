@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
   let(:team) { create(:team) }
-  let(:user) { create(:user, team: team) }
+  let(:user) { create(:user, team: team, status: :active) } # active user
   let(:headers) { auth_headers_for(user) }
 
   describe "GET /users/me" do

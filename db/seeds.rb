@@ -20,20 +20,17 @@ SMILE_AVATAR_URL = "https://imgur.com/m4cBz7B"
 # ------------------------------
 team1 = Team.create!(
   name: "Everybody’s Favorite Records",
-  theme_color: "Green"
+  theme_color: "Green",
+  logo: "https://imgur.com/46DXrU9"
 )
 ActsAsTenant.with_tenant(team1) do
-  # Attach logo
-  team1_logo_file = URI.open("https://imgur.com/46DXrU9")
-  team1.logo.attach(io: team1_logo_file, filename: "records_logo.png")
-
   # Users
   3.times do |i|
     team1.users.create!(
       name: "RecordUser#{i + 1}",
       email: "record#{i + 1}@example.com",
       password: "password",
-      avatar_url: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL
     )
   end
 
@@ -71,18 +68,16 @@ end
 # ------------------------------
 team2 = Team.create!(
   name: "Orange Eye",
-  theme_color: "Orange"
+  theme_color: "Orange",
+  logo: "https://imgur.com/9br1M39"
 )
 ActsAsTenant.with_tenant(team2) do
-  team2_logo_file = URI.open("https://imgur.com/9br1M39")
-  team2.logo.attach(io: team2_logo_file, filename: "orange_eye_logo.png")
-
   3.times do |i|
     team2.users.create!(
       name: "FilmUser#{i + 1}",
       email: "film#{i + 1}@example.com",
       password: "password",
-      avatar_url: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL
     )
   end
 
@@ -119,18 +114,16 @@ end
 # ------------------------------
 team3 = Team.create!(
   name: "Smooth Mouse Studios",
-  theme_color: "Blue"
+  theme_color: "Blue",
+  logo: "https://i.imgur.com/8qDmIim.png"
 )
 ActsAsTenant.with_tenant(team3) do
-  team3_logo_file = URI.open("https://i.imgur.com/8qDmIim.png")
-  team3.logo.attach(io: team3_logo_file, filename: "smooth_mouse_logo.png")
-
   3.times do |i|
     team3.users.create!(
       name: "GameUser#{i + 1}",
       email: "game#{i + 1}@example.com",
       password: "password",
-      avatar_url: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL
     )
   end
 

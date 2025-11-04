@@ -2,6 +2,7 @@ module Api
   module V1
     class TeamsController < ApplicationController
       before_action :authenticate_user!
+      before_action :ensure_active_user
       before_action :set_team, only: [ :show, :update ]
 
       def show
