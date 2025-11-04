@@ -1,4 +1,4 @@
-# 🧩 Team Projects API (Rails 8, Multi-Tenant)
+# Team Projects API (Rails 8, Multi-Tenant)
 
 A backend-only **Rails 8 API** that supports **multi-tenant team project management**.  
 Authentication is handled with **Devise + JWT**, and each tenant (team) has isolated access to its own projects and tasks.
@@ -6,7 +6,7 @@ Authentication is handled with **Devise + JWT**, and each tenant (team) has isol
 Currently a work in progess.
 
 
-## 🚀 Features
+## Features
 
 - Multi-tenant architecture using **acts_as_tenant**
 - JWT authentication with **devise + devise-jwt**
@@ -16,7 +16,7 @@ Currently a work in progess.
 - Active Storage for attachments
 - Tested with **RSpec**, **FactoryBot**, and **Shoulda-Matchers**
 
-## 🧱 Tech Stack
+## Tech Stack
 
 | Component      | Technology                         |
 |----------------|------------------------------------|
@@ -28,19 +28,18 @@ Currently a work in progess.
 | Job/Cache Libs | solid_queue, solid_cache           |
 | Tests          | RSpec, FactoryBot, Faker           |
 
-## 🏗️ Quickstart (Development)
+## Quickstart (Development)
 
-```bash
-# Install dependencies
+### Install dependencies
 bundle install
 
-# Create and migrate the database
+### Create and migrate the database
 rails db:create db:migrate db:seed
 
-# Run the test suite
+### Run the test suite
 bundle exec rspec
 
-# Start the server
+### Start the server
 rails s
 
 Server will start on http://localhost:3000 by default.
