@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Task, type: :model do
   describe "associations" do
     it { should belong_to(:project) }
+    it { should belong_to(:assignee).class_name('User').optional }
   end
 
   describe "validations" do
@@ -33,6 +34,39 @@ RSpec.describe Task, type: :model do
       ActsAsTenant.current_tenant = team2
       expect(Task.all).to include(team2_task)
       expect(Task.all).not_to include(team1_task)
+    end
+  end
+
+  describe "additional fields and associations" do
+    let(:team) { Team.create!(name: "Team Extra", slug: "team-extra") }
+    let(:project) { ActsAsTenant.with_tenant(team) { Project.create!(title: "Extra Project", team: team) } }
+    let(:user) do
+      ActsAsTenant.with_tenant(team) do
+        User.create!(
+          name: "Assignee",
+          email: "assignee@example.com",
+          team: team,
+          status: :active,
+          password: "password",
+          password_confirmation: "password"
+        )
+      end
+    end
+    it "can have an assignee" do
+      task = ActsAsTenant.with_tenant(team) { Task.create!(title: "Task with Assignee", project: project, assignee: user) }
+      expect(task.assignee).to eq(user)
+    end
+
+    it "has default values for completed and archived" do
+      task = ActsAsTenant.with_tenant(team) { Task.create!(title: "Default Task", project: project) }
+      expect(task.completed).to eq(false)
+      expect(task.archived).to eq(false)
+    end
+
+    it "can set a due_date" do
+      due = 2.days.from_now
+      task = ActsAsTenant.with_tenant(team) { Task.create!(title: "Due Task", project: project, due_date: due) }
+      expect(task.due_date.to_i).to eq(due.to_i)
     end
   end
 end

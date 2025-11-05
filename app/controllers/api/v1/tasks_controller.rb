@@ -5,15 +5,18 @@ module Api
       before_action :ensure_active_user
       before_action :set_task, only: [ :show, :update, :destroy ]
 
+      # GET /api/v1/tasks
       def index
-        tasks = Task.all
-        render json: TaskSerializer.new(tasks).serializable_hash
+        tasks = Task.includes(:project, :assignee).all
+        render json: TaskSerializer.new(tasks, include: [ :project, :assignee ]).serializable_hash
       end
 
+      # GET /api/v1/tasks/:id
       def show
         render json: TaskSerializer.new(@task).serializable_hash
       end
 
+      # POST /api/v1/tasks
       def create
         task = Task.new(task_params)
         task.team = current_user.team
@@ -25,27 +28,41 @@ module Api
         end
       end
 
+      # PATCH/PUT /api/v1/tasks/:id
       def update
         if @task.update(task_params)
           render json: TaskSerializer.new(@task).serializable_hash
         else
-          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+          render_validation_errors(@task)
         end
       end
 
+      # DELETE /api/v1/tasks/:id
       def destroy
-        @task.destroy
-        head :no_content
+        if @task.destroy
+          head :no_content
+        else
+          render json: { error: "Failed to delete task" }, status: :unprocessable_entity
+        end
       end
 
       private
 
       def set_task
         @task = Task.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: "Task not found" }, status: :not_found
       end
 
       def task_params
-        params.require(:task).permit(:title, :description, :priority, :completed, :order_position, :project_id)
+        params.require(:task).permit(
+          :title, :description, :priority, :completed, :order_position,
+          :project_id, :due_date, :assignee_id, :archived
+        )
+      end
+
+      def render_validation_errors(record)
+        render json: { errors: record.errors.full_messages }, status: :unprocessable_entity
       end
     end
   end

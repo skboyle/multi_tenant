@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_05_103000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +60,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
     t.integer "order_position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "due_date"
+    t.boolean "archived", default: false, null: false
+    t.string "color"
     t.index ["project_leader_id"], name: "index_projects_on_project_leader_id"
     t.index ["team_id"], name: "index_projects_on_team_id"
   end
@@ -67,10 +70,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
   create_table "projects_users", id: false, force: :cascade do |t|
     t.bigint "project_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "projects_id", null: false
-    t.bigint "users_id", null: false
-    t.index ["projects_id"], name: "index_projects_users_on_projects_id"
-    t.index ["users_id"], name: "index_projects_users_on_users_id"
+    t.index ["project_id", "user_id"], name: "index_projects_users_on_project_id_and_user_id", unique: true
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -83,6 +83,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "team_id", null: false
+    t.datetime "due_date"
+    t.bigint "assignee_id"
+    t.boolean "archived", default: false, null: false
+    t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["project_id"], name: "index_tasks_on_project_id"
     t.index ["team_id"], name: "index_tasks_on_team_id"
   end
@@ -94,6 +98,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
     t.datetime "updated_at", null: false
     t.string "theme_color"
     t.string "logo"
+    t.text "description"
+    t.bigint "owner_id"
+    t.index ["owner_id"], name: "index_teams_on_owner_id"
     t.index ["slug"], name: "index_teams_on_slug", unique: true
   end
 
@@ -110,7 +117,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
     t.string "avatar"
     t.string "role"
     t.string "status"
+    t.bigint "invited_by_id"
+    t.string "title"
+    t.datetime "last_sign_in_at"
+    t.datetime "deactivated_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["team_id"], name: "index_users_on_team_id"
   end
@@ -119,9 +131,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_105335) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "projects", "teams"
   add_foreign_key "projects", "users", column: "project_leader_id"
-  add_foreign_key "projects_users", "projects", column: "projects_id"
-  add_foreign_key "projects_users", "users", column: "users_id"
   add_foreign_key "tasks", "projects"
   add_foreign_key "tasks", "teams"
+  add_foreign_key "tasks", "users", column: "assignee_id"
+  add_foreign_key "teams", "users", column: "owner_id"
   add_foreign_key "users", "teams"
+  add_foreign_key "users", "users", column: "invited_by_id"
 end

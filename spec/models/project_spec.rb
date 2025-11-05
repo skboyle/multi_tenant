@@ -10,6 +10,29 @@ RSpec.describe Project, type: :model do
 
   describe "validations" do
     it { should validate_presence_of(:title) }
+
+    it "validates title length" do
+      expect(build(:project, title: "A")).not_to be_valid
+      expect(build(:project, title: "A" * 201)).not_to be_valid
+      expect(build(:project, title: "Valid Title")).to be_valid
+    end
+
+    it "validates color format" do
+      expect(build(:project, color: "notacolor")).not_to be_valid
+      expect(build(:project, color: "#FFF")).to be_valid
+      expect(build(:project, color: "#ABC123")).to be_valid
+    end
+
+    it "validates archived inclusion" do
+      expect(build(:project, archived: nil)).not_to be_valid
+      expect(build(:project, archived: true)).to be_valid
+      expect(build(:project, archived: false)).to be_valid
+    end
+
+    it "validates due_date cannot be in the past" do
+      expect(build(:project, due_date: 1.day.ago)).not_to be_valid
+      expect(build(:project, due_date: 1.day.from_now)).to be_valid
+    end
   end
 
   describe "acts_as_list" do
