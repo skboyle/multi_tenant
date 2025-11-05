@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe "Api::V1::Tasks", type: :request do
   let(:team) { create(:team) }
   let(:project) { create(:project, team: team) }

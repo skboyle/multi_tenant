@@ -20,6 +20,24 @@ RSpec.describe Team, type: :model do
     it { should validate_presence_of(:slug) }
     it { should validate_uniqueness_of(:name) }
     it { should validate_uniqueness_of(:slug) }
+
+    it "is invalid with a name that is too short" do
+      team = build(:team, name: "AB")
+      expect(team).not_to be_valid
+      expect(team.errors[:name]).to include("is too short (minimum is 3 characters)")
+    end
+
+    it "is invalid with a name that is too long" do
+      team = build(:team, name: "A" * 101)
+      expect(team).not_to be_valid
+      expect(team.errors[:name]).to include("is too long (maximum is 100 characters)")
+    end
+
+    it "is invalid with a description that is too long" do
+      team = build(:team, description: "A" * 1001)
+      expect(team).not_to be_valid
+      expect(team.errors[:description]).to include("is too long (maximum is 1000 characters)")
+    end
   end
 
   describe "callbacks" do

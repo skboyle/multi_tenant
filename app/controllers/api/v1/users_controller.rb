@@ -8,17 +8,29 @@ module Api
       end
 
       def update
+        if changing_status_by_non_admin?
+          render json: { error: "Only admins can change status" }, status: :forbidden
+          return
+        end
+
         if current_user.update(user_params)
           render json: UserSerializer.new(current_user).serializable_hash
         else
-          render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: current_user.errors.to_hash(full_messages: true) },
+                 status: :unprocessable_entity
         end
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:name, :avatar)
+        allowed = [ :name, :avatar, :title ]
+        allowed << :status if current_user.admin?
+        params.require(:user).permit(*allowed)
+      end
+
+      def changing_status_by_non_admin?
+        params[:user]&.key?(:status) && !current_user.admin?
       end
     end
   end
