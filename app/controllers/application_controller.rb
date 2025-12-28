@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
 
   before_action :authenticate_user!
+  before_action :set_current_tenant
 
   private
 
@@ -11,6 +12,10 @@ class ApplicationController < ActionController::API
     return if current_user.present?
 
     render json: { error: "Not authorized" }, status: :unauthorized
+  end
+
+  def set_current_tenant
+    ActsAsTenant.current_tenant = current_user.team
   end
 
   def ensure_active_user
