@@ -13,7 +13,8 @@ require "open-uri"
 puts "Seeding teams, users, projects, and tasks..."
 
 # A free smile avatar URL (royalty‑free)
-SMILE_AVATAR_URL = "https://imgur.com/m4cBz7B"
+SMILE_AVATAR_URL,
+       = "https://imgur.com/m4cBz7B"
 
 # ------------------------------
 # Team 1: Everybody's Favorite Records
@@ -30,7 +31,8 @@ ActsAsTenant.with_tenant(team1) do
       name: "RecordUser#{i + 1}",
       email: "record#{i + 1}@example.com",
       password: "password",
-      avatar: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL,
+      status: "active"
     )
   end
 
@@ -77,7 +79,8 @@ ActsAsTenant.with_tenant(team2) do
       name: "FilmUser#{i + 1}",
       email: "film#{i + 1}@example.com",
       password: "password",
-      avatar: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL,
+      status: "active"
     )
   end
 
@@ -123,7 +126,8 @@ ActsAsTenant.with_tenant(team3) do
       name: "GameUser#{i + 1}",
       email: "game#{i + 1}@example.com",
       password: "password",
-      avatar: SMILE_AVATAR_URL
+      avatar: SMILE_AVATAR_URL,
+      status: "active"
     )
   end
 
