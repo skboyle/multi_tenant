@@ -45,7 +45,7 @@ gem "jsonapi-serializer"
 # Task ordering
 gem "acts_as_list"
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
 
 # safer migrations
 gem "strong_migrations"

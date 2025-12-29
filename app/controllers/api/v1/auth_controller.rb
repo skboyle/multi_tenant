@@ -44,6 +44,23 @@ module Api
         Rails.logger.error("Signup error: #{e.message}")
         render json: { errors: { base: [ "Unexpected error occurred" ] } }, status: :internal_server_error
       end
+
+
+      def login
+        user = User.find_by(email: params[:email])
+
+        if user&.valid_password?(params[:password])
+          # Generate JWT token (assuming you're using Warden JWT Auth)
+          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+
+          render json: {
+            token: token,
+            user: UserSerializer.new(user)
+          }, status: :ok
+        else
+          render json: { error: "Invalid credentials" }, status: :unauthorized
+        end
+      end
     end
   end
 end
